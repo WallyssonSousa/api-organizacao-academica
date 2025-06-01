@@ -1,0 +1,30 @@
+# Ambiente virtual
+venv/
+
+# Arquivo de variáveis de ambiente
+.env
+
+# Arquivo docker-compose (caso não queira versionar)
+docker-compose.yml
+
+# __pycache__ e arquivos temporários
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Arquivos de banco de dados SQLite
+*.sqlite3
+*.db
+
+# VSCode settings
+.vscode/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
