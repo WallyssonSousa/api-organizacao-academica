@@ -1,3 +1,4 @@
+import time
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from config import configure_app
@@ -6,6 +7,7 @@ from routes.Home import home
 from routes.ResultsRoutes import resultados_bp
 from flask_migrate import Migrate
 from extensios import db
+from sqlalchemy.exc import OperationalError
 
 app = Flask(__name__)
 configure_app(app)
@@ -14,8 +16,15 @@ configure_app(app)
 db.init_app(app)
 
 with app.app_context():
-    db.create_all()
     print("Database tables created successfully.")
+
+    for _ in range(10):
+        try:
+            db.create_all()
+            break
+        except OperationalError:
+            print("MySQL ainda não está pronto. Tentando novamente em 2s...")
+            exit(1)
 
 migrate = Migrate(app, db)
 
