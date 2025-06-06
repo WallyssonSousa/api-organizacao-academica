@@ -36,11 +36,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest
+          pip install pytest mysql-connector-python
 
       - name: Run tests
         env:
+          PYTHONPATH: ${{ github.workspace }}
           SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:Ws07830519*@localhost:3306/organizacao_academica
           JWT_SECRET_KEY: supersecretkey
         run: |
-          pytest tests/
+          pytest teste/

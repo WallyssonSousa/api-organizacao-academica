@@ -1,4 +1,3 @@
-import time
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from config import configure_app
@@ -8,34 +7,38 @@ from routes.ResultsRoutes import resultados_bp
 from flask_migrate import Migrate
 from extensios import db
 from sqlalchemy.exc import OperationalError
+import time
 
-app = Flask(__name__)
-configure_app(app)
+jwt = JWTManager()
+migrate = Migrate()
 
+def create_app():
+    app = Flask(__name__)
+    configure_app(app)
+    db.init_app(app)
+    jwt.init_app(app)
+    migrate.init_app(app, db)
 
-db.init_app(app)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(home)
+    app.register_blueprint(resultados_bp)
 
-with app.app_context():
-    print("Database tables created successfully.")
-
-    for _ in range(10):
-        try:
-            db.create_all()
-            break
-        except OperationalError:
-            print("MySQL ainda não está pronto. Tentando novamente em 2s...")
+    with app.app_context():
+        for _ in range(10):
+            try:
+                db.create_all()
+                break
+            except OperationalError:
+                print("MySQL ainda não está pronto. Tentando novamente em 2s...")
+                time.sleep(2)
+        else:
+            print("Erro: Banco não respondeu.")
             exit(1)
 
-migrate = Migrate(app, db)
-
-
-jwt = JWTManager(app)
-
-app.register_blueprint(auth_bp)
-app.register_blueprint(home)
-app.register_blueprint(resultados_bp)
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(
         host=app.config['HOST'],
         port=app.config['PORT'],
