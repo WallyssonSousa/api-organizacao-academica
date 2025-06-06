@@ -44,4 +44,5 @@ jobs:
           SQLALCHEMY_DATABASE_URI: mysql+mysqlconnector://root:Ws07830519*@localhost:3306/organizacao_academica
           JWT_SECRET_KEY: supersecretkey
         run: |
-          pytest teste/
+          ls -la 
+          pytest
