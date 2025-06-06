@@ -1,4 +1,5 @@
 def test_home(client):
     response = client.get('/')
     assert response.status_code == 200
-    assert b'Welcome to the Home Page' in response.data
+    data = response.get_json()
+    assert data["message"] == "Welcome to Organização Acadêmica API"
